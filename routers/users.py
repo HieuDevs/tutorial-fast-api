@@ -18,15 +18,15 @@ def get_users(db: Session = Depends(get_db)):
 
 
 @router.post(path="/", status_code=status.HTTP_201_CREATED, response_model=UserOut)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.email == user.email).first()
+def create_user(userCeate: UserCreate, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.email == userCeate.email).first()
     if user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=f"Email {user.email} exist"
         )
-    hashed_password = utils.hash_password(user.password)
-    user.password = hashed_password
+    hashed_password = utils.hash_password(userCeate.password)
     new_user = models.User(**user.model_dump())
+    new_user.password = hashed_password
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
