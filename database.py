@@ -7,7 +7,6 @@ from psycopg2.extras import RealDictCursor
 from config import setting
 
 SQLALCHEMY_DATABASE_URL = f"postgresql://{setting.database_username}:{setting.database_password}@{setting.database_hostname}:{setting.database_port}/{setting.database_name}"
-print(SQLALCHEMY_DATABASE_URL)
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SeesionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -25,10 +24,10 @@ def get_db():
 while True:
     try:
         connection = psycopg2.connect(
-            host="localhost",
-            database="fastapi",
-            user="postgres",
-            password="Mobiledev1307",
+            host=setting.database_hostname,
+            database=setting.database_name,
+            user=setting.database_username,
+            password=setting.database_password,
             cursor_factory=RealDictCursor,
         )
         print("Connect database successfully")
